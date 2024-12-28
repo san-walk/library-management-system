@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Auth</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wellcome ADMIN, you are on the updating page of the Library Portal</h1>
+    <h2>Updating {{username}} information:</h2>
+    <form id="registrationForm" action="http://localhost:5000/update/confirm" method="POST">
+        <input type="hidden" name="username" value="{{ username }}">
+        <p>First Name:</p>
+        <input type="text" name="firstName" id="firstName"><br>
+        <p>Last Name:</p>
+        <input type="text" name="lastName" id="lastName"><br>
+        <p>Email:</p>
+        <input type="text" name="email" id="email"><br>
+        <p>Phone Number:</p>
+        <input type="text" name="phoneNumber" id="phoneNumber"><br>
+        <p class="error" id="error-message"></p><br>
+        <input type="submit" name="submit" value="submit">
+    </form><br>
+    <script>
+        const form = document.getElementById('registrationForm')
+        const showError = document.getElementById('error-message')
+
+        // using regular expressions 
+        const emailValidate = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        const phoneValidate = /^\d{10}$/; 
+
+        // function to check the validity of the input credentials
+        function validateForm(event) {
+            let errors = [];
+            showError.innerHTML = '';
+
+            const first = document.getElementById('firstName').value;
+            if (!first) {
+                errors.push('Please enter the updated FIRST NAME.');
+            }
+
+            const last = document.getElementById('lastName').value;
+            if (!last) {
+                errors.push('Please enter the updated LAST NAME.');
+            }
+
+            const email = document.getElementById('email').value;
+            if (!email) {
+                errors.push('Please enter the updated email address.');
+            } else if (!emailValidate.test(email)) {
+                errors.push('Please enter a valid EMAIL address.');
+            }
+
+            const phoneNum = document.getElementById('phoneNumber').value;
+            if (!phoneNum) {
+                errors.push('Please enter the updated PHONE NUMBER.');
+            } else if (!phoneValidate.test(phoneNum)) {
+                errors.push('Enter a 10-digit valid phone number.');
+            }
+
+
+            // if there are errors, show them 
+            if (errors.length > 0) {
+                event.preventDefault();
+                showError.innerHTML = errors.join('<br>');
+            }
+        }
+        form.addEventListener('submit', validateForm);
+    </script>
+    <p>Click <b>SUBMIT</b> button  after you ensure the details.</p>
+    <p>You have to fill all the fields for proceding.</p><br>
+</body>
+</html>

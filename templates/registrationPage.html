@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Form</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wellcome to the Library Portal</h1>
+    <h2>Register yourself before proceding:</h2>
+    <form id="registrationForm" action="http://localhost:5000/register" method="POST">
+        <p>First Name:</p>
+        <input type="text" name="firstName" id="firstName"><br>
+        <p>Last Name:</p>
+        <input type="text" name="lastName" id="lastName"><br>
+        <p>Username:</p>
+        <input type="text" name="username" id="username"><br>
+        <p>Email:</p>
+        <input type="text" name="email" id="email"><br>
+        <p>Phone Number:</p>
+        <input type="text" name="phoneNumber" id="phoneNumber"><br>
+        <p>Set Password:</p>
+        <input type="password" name="password" id="password"><br><br>
+        <p class="error" id="error-message"></p><br>
+        <input type="submit" name="submit" value="submit">
+    </form>
+    <script>
+        const form = document.getElementById('registrationForm')
+        const showError = document.getElementById('error-message')
+
+        // using regular expressions 
+        const emailValidate = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+        const phoneValidate = /^\d{10}$/; 
+        const passwordValidate = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/; 
+
+        // function to check the validity of the input credentials
+        function validateForm(event) {
+            let errors = [];
+            showError.innerHTML = '';
+
+            const email = document.getElementById('email').value;
+            if (!email) {
+                errors.push('Please enter email address to continue.');
+            } else if (!emailValidate.test(email)) {
+                errors.push('Please enter a valid email address.');
+            }
+
+            const phoneNum = document.getElementById('phoneNumber').value;
+            if (!phoneNum) {
+                errors.push('Please enter phone number to continue.');
+            } else if (!phoneValidate.test(phoneNum)) {
+                errors.push('Enter a 10-digit valid phone number.');
+            }
+
+            const password = document.getElementById('password').value;
+            if (!password) {
+                errors.push('Please enter password to continue.');
+            } else if (!passwordValidate.test(password)) {
+                errors.push('Password must be at least of 6 letters and contain both numbers and characters.');
+            }
+
+            // if there are errors, show them 
+            if (errors.length > 0) {
+                event.preventDefault();
+                showError.innerHTML = errors.join('<br>');
+            }
+        }
+        form.addEventListener('submit', validateForm);
+    </script>
+    <p>Click <b>SUBMIT</b> button to register your identity at our site and do <b>LOGIN</b> after the registration.</p><br>
+    <p>Already have an account </p><a href="http://localhost:5000/login">Login here</a></p>
+</body>
+</html>
