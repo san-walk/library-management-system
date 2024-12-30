@@ -33,7 +33,6 @@ class registrationController():
             # validation of the form data
             errors = validate.validAllData(registrationData)
             if errors: 
-                # return f'{errors}'
                 return render_template('registrationPage.html', err = errors[0])
             
             # store the data in database
