@@ -16,6 +16,7 @@ Date: 26th Dec 2024
 Purpose: this class has the required functions for the registration form which is imported in routes.py file
 '''
 class registrationController():
+    # get registration form page where session is also checks for any logedin user
     def get():
         if 'username' in session:
             print ('we got a session.')
@@ -23,6 +24,7 @@ class registrationController():
             return redirect('/admin') if isUser else redirect('/books')
         return render_template('registrationPage.html')
     
+    # post the registration data on the database
     def post():
         try:
             # get data from the form

@@ -12,6 +12,7 @@ Date: 27th Dec 2024
 Purpose: home controller class called at home route, but never showed it redirects to the register page
 '''
 class homeController():
+    # home route redirected to the register page
     def get():
         if 'username' in session:
             print ('we got a session.')

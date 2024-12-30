@@ -11,6 +11,7 @@ Date: 27th Dec 2024
 Purpose: books controller class to render booksPage.html
 '''
 class booksController():
+    # get all the books on the web page
     def get():
         booksData = bookModel.getAllBooks()
         print (booksData)

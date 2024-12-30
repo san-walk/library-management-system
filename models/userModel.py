@@ -62,6 +62,7 @@ class userModel(Base):
         else:
             return False
     
+    # method to update user delails
     @staticmethod
     def update(username, updateCrentials):
         user = dbSession.query(userModel).filter(userModel.username==username).first()
@@ -77,6 +78,7 @@ class userModel(Base):
         dbSession.commit()
         return user
     
+    # delete users with username
     @staticmethod
     def delete(username):
         dele = dbSession.query(userModel).filter(userModel.username == username).delete()

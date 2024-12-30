@@ -15,6 +15,7 @@ Date: 26th Dec 2024
 Purpose: this class has the required functions for the login task
 '''
 class loginController():
+    # get login page where session is also checked
     def get():
         if 'username' in session:
             print ('we got a session.')
@@ -22,6 +23,7 @@ class loginController():
             return redirect('/admin') if isUser else redirect('/books')
         return render_template('loginPage.html')
 
+    # post login function to verify user/admin 
     def post():
         try:
             # get data from the form
@@ -74,6 +76,7 @@ Date: 27th Dec 2024
 Purpose: this class is resposible for logout, it is not required to define this class in different file, it is ok for this project
 '''    
 class logoutController():
+    # logout function which clears the session
     def logout():
         print (session['username'])
         session.pop('username', None)

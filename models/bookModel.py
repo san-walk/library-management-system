@@ -17,6 +17,7 @@ class bookModel(Base):
     author = Column(String)
     referenceNumber = Column(Integer)
 
+    # method to get all the books
     @staticmethod
     def getAllBooks():
         booksData = dbSession.query(bookModel).all()
