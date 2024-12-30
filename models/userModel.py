@@ -14,10 +14,10 @@ class userModel(Base):
     __tablename__ = "users"
 
     snum = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String)
-    firstName = Column(String)
-    lastName = Column(String)
-    email = Column(String)
+    username = Column(String(15))
+    firstName = Column(String(20))
+    lastName = Column(String(20))
+    email = Column(String(50))
     phoneNumber = Column(Integer)
     password = Column(String)
     isAdmin = Column(Boolean, default=False)

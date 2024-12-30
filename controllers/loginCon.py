@@ -16,6 +16,14 @@ Purpose: this class has the required functions for the login task
 '''
 class loginController():
     def get():
+        if 'username' in session:
+            print ('we got a session.')
+            isUser = userModel.getAdmin(session['username'])
+            return redirect('/admin') if isUser else redirect('/books')
+            # isUser = userModel.getUsername(session['username'])
+            # if isUser:
+            #     print (isUser)
+            #     return redirect('/books')
         return render_template('loginPage.html')
 
     def post():
@@ -47,6 +55,7 @@ class loginController():
             
             # continue login if username and password is correct
             if confirmUser and confirmPassword:
+                session['username'] = loginCredentials['username']
                 # check user is admin or not
                 userIsAdmin = False
                 admin = userModel.getAdmin(loginCredentials['username'])
@@ -69,5 +78,6 @@ Purpose: this class is resposible for logout, it is not required to define this 
 '''    
 class logoutController():
     def logout():
+        print (session['username'])
         session.pop('username', None)
         return redirect('/')
