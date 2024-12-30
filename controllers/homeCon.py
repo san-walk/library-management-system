@@ -17,6 +17,4 @@ class homeController():
             print ('we got a session.')
             isUser = userModel.getAdmin(session['username'])
             return redirect('/admin') if isUser else redirect('/books')
-            # userModel.getUsername(session['username'])
-            # return redirect('/books')
         return redirect('/register')

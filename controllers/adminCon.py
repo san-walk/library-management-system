@@ -11,7 +11,7 @@ class adminController():
         return render_template('adminsPage.html', users = userData)
     
     def getUpdate(user):
-        return render_template('updatePage.html', username=user)
+        return render_template('updatePage.html', user=user)
     
     def postUpdate(user):
         formData = request.form

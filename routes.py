@@ -79,7 +79,8 @@ Purpose: get route for updating the user
 '''
 @main.route('/update', methods = ['POST'])
 def update():
-    user = request.form.get('username')
+    user = request.form
+    print (user['username'])
     return adminController.getUpdate(user)
     
 

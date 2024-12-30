@@ -20,10 +20,6 @@ class loginController():
             print ('we got a session.')
             isUser = userModel.getAdmin(session['username'])
             return redirect('/admin') if isUser else redirect('/books')
-            # isUser = userModel.getUsername(session['username'])
-            # if isUser:
-            #     print (isUser)
-            #     return redirect('/books')
         return render_template('loginPage.html')
 
     def post():
