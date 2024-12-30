@@ -19,9 +19,12 @@ class registrationController():
     # get registration form page where session is also checks for any logedin user
     def get():
         if 'username' in session:
-            print ('we got a session.')
-            isUser = userModel.getAdmin(session['username'])
-            return redirect('/admin') if isUser else redirect('/books')
+            print ('we got into the session for the getregistration form! registration controller........')
+            return validate.ifSession(session)
+        
+            # print ('we got a session.')
+            # isUser = userModel.getAdmin(session['username'])
+            # return redirect('/admin') if isUser else redirect('/books')
         return render_template('registrationPage.html')
     
     # post the registration data on the database
@@ -53,6 +56,7 @@ class registrationController():
             dbSession.flush()
             dbSession.commit()                    # commit the data in database
             session['username'] = registrationData['username']      # session is maintained
+            session['admin'] = False
             return redirect(f'books')
             
         except Exception as e:

@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
 from connection import engine
 from models.userModel import userModel
+from helpers import validate
 
 
 Session = sessionmaker(engine)
@@ -18,9 +19,11 @@ class loginController():
     # get login page where session is also checked
     def get():
         if 'username' in session:
-            print ('we got a session.')
-            isUser = userModel.getAdmin(session['username'])
-            return redirect('/admin') if isUser else redirect('/books')
+            return validate.ifSession(session) 
+        
+            # print ('we got a session.')
+            # isUser = userModel.getAdmin(session['username'])
+            # return redirect('/admin') if isUser else redirect('/books')
         return render_template('loginPage.html')
 
     # post login function to verify user/admin 
@@ -33,7 +36,7 @@ class loginController():
             # check username from the class function
             confirmUser = False
             userN = loginCredentials['username']
-            name = userModel.getUsername(userN)
+            name = userModel.getPassword(userN)
             if name:
                 print ('username got!')
                 confirmUser = True
@@ -44,8 +47,9 @@ class loginController():
             # check password from the class function
             confirmPassword = False
             enteredPassword = loginCredentials['password']
-            storedPassword = userModel.getPassword(userN)
-            if storedPassword and check_password_hash(storedPassword[0], enteredPassword):
+            # storedPassword = userModel.getPassword(userN)      # TODO : Duplicate query
+            userData = userModel.getPassword(userN)
+            if userData[0] and check_password_hash(userData[0], enteredPassword):
                 print ('password matched!')
                 confirmPassword = True
             else:
@@ -54,10 +58,12 @@ class loginController():
             # continue login if username and password is correct
             if confirmUser and confirmPassword:
                 session['username'] = loginCredentials['username']
+                session['admin'] = False
                 # check user is admin or not
                 userIsAdmin = False
                 admin = userModel.getAdmin(loginCredentials['username'])
-                if admin:   
+                if admin:
+                    session['admin'] = True
                     userIsAdmin = True
 
                 return redirect('/admin') if userIsAdmin else redirect('/books')
@@ -80,4 +86,5 @@ class logoutController():
     def logout():
         print (session['username'])
         session.pop('username', None)
-        return redirect('/')
+        session.pop('admin', None)
+        return redirect('/login')

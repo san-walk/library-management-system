@@ -16,6 +16,6 @@ class homeController():
     def get():
         if 'username' in session:
             print ('we got a session.')
-            isUser = userModel.getAdmin(session['username'])
+            isUser = userModel.getAdmin(session['username']) # TODO : Do not run query here
             return redirect('/admin') if isUser else redirect('/books')
         return redirect('/register')

@@ -103,4 +103,3 @@ Purpose: this route used to delete a user, only admins can delete users
 def deleteUser():
     user = request.form.get('username')
     return adminController.deleteUser(user)
-

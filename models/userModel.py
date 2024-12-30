@@ -34,7 +34,7 @@ class userModel(Base):
     
     # used to get a username
     @staticmethod
-    def getUsername(username):
+    def getUserData(username):
         isUser = dbSession.query(userModel).filter(userModel.username==username).first()
         if isUser:
             print ('username found!     verified from the userModel.py ')
@@ -64,7 +64,7 @@ class userModel(Base):
     
     # method to update user delails
     @staticmethod
-    def update(username, updateCrentials):
+    def update(username, updateCrentials):    # TODO : Add validations here too similar to register user
         user = dbSession.query(userModel).filter(userModel.username==username).first()
         if not user:
             print ('user not found!')

@@ -1,3 +1,4 @@
+from flask import redirect
 from models.userModel import userModel
 import re
 
@@ -6,6 +7,12 @@ Date: 27th Dec 2024
 Purpose: this is the validate function used to verify the data
 '''
 class validate():
+    def ifSession(session):
+        print ('we got a session!')
+        print ('admin in session -----> ', session['admin'])
+        isUser = session['admin']
+        return redirect('/admin') if isUser else redirect('/books')
+
     def isValidEmail(email):
         emailRegex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
         return re.match(emailRegex, email) is not None
@@ -56,7 +63,7 @@ class validate():
         # Check for unique username in the database
         username = form['username']
         if username:
-            name = userModel.getUsername(username)
+            name = userModel.getUserData(username)
             if name:
                 errors.append('Username already exists!')
 
