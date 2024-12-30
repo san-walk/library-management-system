@@ -1,5 +1,6 @@
+import flask
 from controllers.registrationCon import registrationController
-from flask import Flask, request, Blueprint
+from flask import Flask, jsonify, request, redirect, Blueprint
 from controllers.homeCon import homeController
 from controllers.booksCon import booksController
 from controllers.loginCon import loginController, logoutController
@@ -102,3 +103,4 @@ Purpose: this route used to delete a user, only admins can delete users
 def deleteUser():
     user = request.form.get('username')
     return adminController.deleteUser(user)
+
