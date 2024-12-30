@@ -29,6 +29,9 @@
         <p class="error" id="error-message"></p><br>
         <input type="submit" name="submit" value="submit">
     </form>
+    {% if err %}
+    <p class="error">{{ err }}</p>
+    {% endif %}
     <script>
         const form = document.getElementById('registrationForm')
         const showError = document.getElementById('error-message')

@@ -61,7 +61,8 @@ class loginController():
                 return redirect('/admin') if userIsAdmin else redirect('/books')
                 
             else:
-                return 'Incorrect Credentials!'
+                err = "Invalid Credentials!"
+                return render_template('loginPage.html', err = err)
 
         except Exception as e:
             dbSession.rollback()
