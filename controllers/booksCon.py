@@ -17,8 +17,9 @@ class booksController():
     def get():
         booksData = bookModel.getAllBooks()
         user = session['username']
+        retun = reqModel.getReturnableReq(user)
         booksReq = reqModel.getUserRequest(user)
-        return render_template('booksPage.html', books=booksData, requests=booksReq)
+        return render_template('booksPage.html', books=booksData, approves=retun, requests=booksReq)
 
     def getAddBook():
         return render_template('newBookPage.html')
@@ -43,4 +44,18 @@ class booksController():
         reqModel.addRequest(newReq)
         user = session['username']
         userModel.changePending(user, 1)
+        return redirect('/books')
+    
+    def returnBook():
+        print ('book is going to return user read this book or no longer wants this book.')
+        book = request.form
+        print (book)
+        # update user details 
+        userModel.changeReturn(book['issuedBy'], 1)
+        userModel.changeIssue(book['issuedBy'], -1)
+        # update books table
+        bookModel.changeIssue(book['bookId'], -1)
+        bookModel.changeAvailabe(book['bookId'], 1)
+        # update request table
+        reqModel.changeReturn(book['issuedBy'], book['bookId'])
         return redirect('/books')

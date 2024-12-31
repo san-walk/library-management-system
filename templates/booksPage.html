@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        td {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+    </style>
 </head>
 <body>
     <h2>Wellcome {{ session['username'] }}</h2>
@@ -40,6 +46,31 @@
         {% endfor %}
     </table>
 
+    {% if approves %}
+        <h3>Want to return books: </h3>
+        <table border="1">
+            <tr>
+                <th>Book Name</th>
+                <th>Book ID</th>
+                <th>Click to return</th>
+            </tr>
+            {% for approve in approves %}
+                <tr>
+                    <td>{{ approve.bookName }}</td>
+                    <td>{{ approve.bookId }}</td>
+                    <td>
+                        <form action="http://localhost:5000/books/return" method="POST" style="display:inline;">
+                            <input type="hidden" name="bookName" value="{{ approve.bookName }}">
+                            <input type="hidden" name="issuedBy" value="{{ session['username'] }}">
+                            <input type="hidden" name="bookId" value="{{ approve.bookId }}">
+                            <button type="submit">RETURN</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
     {% if requests %}
         <h3>Your Requests: </h3>
         <table border="1">
@@ -60,5 +91,6 @@
             {% endfor %}
         </table>
     {% endif %}
+
 </body>
 </html>

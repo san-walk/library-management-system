@@ -20,6 +20,7 @@ class reqModel(Base):
     bookId = Column(String)
     action = Column(Boolean, default=None)
     approval = Column(Boolean, default=None)
+    returned = Column(Boolean, default=None)
 
 
     @staticmethod
@@ -55,9 +56,27 @@ class reqModel(Base):
             print ("user didn't have any requests yet")
 
     @staticmethod
+    def getReturnableReq(user):
+        print ('going to get requests which is approved and may be i am going to return')
+        reqs = dbSession.query(reqModel).filter(reqModel.issuedBy==user, reqModel.approval==True, reqModel.returned!=True).all()
+        if reqs:
+            print ('got all returnable requests!')
+            return reqs
+        else:
+            print ("user didn't have any returnable requests.")
+
+    @staticmethod
     def changeActionNApproval(_snum, _action, _approval):
         action = dbSession.query(reqModel).filter(reqModel.snum==_snum).first()
         action.action = _action
         action.approval = _approval
+        action.returned = False
+        dbSession.add(action)
+        dbSession.commit()
+
+    @staticmethod
+    def changeReturn(user, _id):
+        action = dbSession.query(reqModel).filter(reqModel.issuedBy==user, reqModel.bookId==_id).first()
+        action.returned = True
         dbSession.add(action)
         dbSession.commit()

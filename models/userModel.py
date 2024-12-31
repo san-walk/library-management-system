@@ -103,3 +103,10 @@ class userModel(Base):
         issue.booksIssued += num
         dbSession.add(issue)
         dbSession.commit()
+
+    @staticmethod
+    def changeReturn(user, num):
+        re = dbSession.query(userModel).filter(userModel.username==user).first()
+        re.booksReturned += num
+        dbSession.add(re)
+        dbSession.commit()

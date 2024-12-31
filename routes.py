@@ -79,6 +79,14 @@ Purpose: route used to issue book by user
 def issueBook():
     return booksController.issueBook()
 
+'''
+Date: 31st Dec 2024
+Purpose: route used to return a book by user
+'''
+@main.route('/books/return', methods = ['POST'])
+def returnBook():
+    return booksController.returnBook()
+
 
 '''
 Date: 27th Dec 2024
