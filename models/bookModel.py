@@ -16,9 +16,42 @@ class bookModel(Base):
     bookName = Column(String)
     author = Column(String)
     referenceNumber = Column(Integer)
+    issued = Column(Integer, default=0)
+    quantity = Column(Integer)
+    available = Column(Integer, default=quantity)
 
     # method to get all the books
     @staticmethod
     def getAllBooks():
         booksData = dbSession.query(bookModel).all()
         return booksData
+    
+    @staticmethod
+    def addNewBook(newBook):
+        print ("data of new book is going to fillin the bookModel")
+        book = bookModel(
+            bookName = newBook['bookName'],
+            author = newBook['author'],
+            referenceNumber = newBook['referenceNumber'],
+            issued = 0,
+            quantity = newBook['quantity'],
+            available = newBook['quantity']
+        )
+        dbSession.add(book)
+        dbSession.commit()
+        print ('data is commited successfully!')
+
+
+    @staticmethod
+    def changeIssue(id, num):
+        issue = dbSession.query(bookModel).filter(bookModel.referenceNumber==id).first()
+        issue.issued += num
+        dbSession.add(issue)
+        dbSession.commit()
+
+    @staticmethod
+    def changeAvailabe(id, num):
+        issue = dbSession.query(bookModel).filter(bookModel.referenceNumber==id).first()
+        issue.available += num
+        dbSession.add(issue)
+        dbSession.commit()

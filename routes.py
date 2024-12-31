@@ -55,6 +55,30 @@ Purpose: route for the books page
 def books():
     return booksController.get()
 
+'''
+Date: 31st Dec 2024
+Purpose: route to get addBooksPage to add new book
+'''
+@main.route('/books/add-new')
+def addBook():
+    return booksController.getAddBook()
+
+'''
+Date: 31st Dec 2024
+Purpose: route to post the new book data
+'''
+@main.route('/books/add-new', methods = ['POST'])
+def postBook():
+    return booksController.postAddBook()
+
+'''
+Date: 31st Dec 2024
+Purpose: route used to issue book by user
+'''
+@main.route('/books/issue', methods = ['POST'])
+def issueBook():
+    return booksController.issueBook()
+
 
 '''
 Date: 27th Dec 2024
@@ -103,3 +127,25 @@ Purpose: this route used to delete a user, only admins can delete users
 def deleteUser():
     user = request.form.get('username')
     return adminController.deleteUser(user)
+
+
+'''
+Date: 31st Dec 2024
+Purpose: post route used to approve issued request for book
+'''
+@main.route('/approve', methods = ['POST'])
+def approve():
+    return adminController.approveReq()
+
+'''
+Date: 31st Dec 2024
+Purpose: post route used to reject issued request for book
+'''
+@main.route('/reject', methods = ['POST'])
+def reject():
+    return adminController.rejectReq()
+
+# testing route
+@main.route('/test')
+def test():
+    return userModel.changePending('testtest111', -1)

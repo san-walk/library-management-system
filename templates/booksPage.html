@@ -6,13 +6,18 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>Wellcome {{username}}</h2>
+    <h2>Wellcome {{ session['username'] }}</h2>
+    <a href="http://localhost:5000/logout">Click here to logout</a><br>
     <table border=1>
         <tr>
             <th>S. No.</th>
             <th>Book Name</th>
             <th>Author Name</th>
             <th>Reference No.</th>
+            <th>Quantity</th>
+            <th>Issued</th>
+            <th>Available</th>
+            <th>Request</th>
         </tr>
         {% for book in books %}
             <tr>
@@ -20,10 +25,40 @@
                 <td>{{ book.bookName }}</td>
                 <td>{{ book.author }}</td>
                 <td>{{ book.referenceNumber }}</td>
+                <td>{{ book.quantity }}</td>
+                <td>{{ book.issued }}</td>
+                <td>{{ book.available }}</td>
+                <td>
+                    <form action="http://localhost:5000/books/issue" method="POST" style="display:inline;">
+                        <input type="hidden" name="bookName" value="{{ book.bookName }}">
+                        <input type="hidden" name="issuedBy" value="{{ session['username'] }}">
+                        <input type="hidden" name="referenceNumber" value="{{ book.referenceNumber }}">
+                        <button type="submit">Issue Book</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </table>
 
-    <a href="http://localhost:5000/logout">Click here to logout</a>
+    {% if requests %}
+        <h3>Your Requests: </h3>
+        <table border="1">
+            <tr>
+                <th>Book Name</th>
+                <th>Book ID</th>
+                <th>Action</th>
+                <th>Approval</th>
+                <!-- <th>Action</th> -->
+            </tr>
+            {% for request in requests %}
+                <tr>
+                    <td>{{ request.bookName }}</td>
+                    <td>{{ request.bookId }}</td>
+                    <td>{{ request.action }}</td>
+                    <td>{{ request.approval }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
 </body>
 </html>

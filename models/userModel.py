@@ -2,6 +2,8 @@ from sqlalchemy import Column, String, Integer, Boolean, create_engine, UniqueCo
 from connection import engine, Base
 from sqlalchemy.orm import sessionmaker
 
+
+
 Session = sessionmaker(engine)
 dbSession = Session()
 
@@ -21,6 +23,9 @@ class userModel(Base):
     phoneNumber = Column(Integer)
     password = Column(String)
     isAdmin = Column(Boolean, default=False)
+    booksIssued = Column(Integer, default=0)
+    pendingRequest = Column(Integer, default=0)
+    booksReturned = Column(Integer, default=0)
     __table_args__ = (UniqueConstraint('username', name='_username_uc'),)
 
 
@@ -84,3 +89,17 @@ class userModel(Base):
         dele = dbSession.query(userModel).filter(userModel.username == username).delete()
         dbSession.commit()
         return dele
+    
+    @staticmethod
+    def changePending(user, num):
+        pending = dbSession.query(userModel).filter(userModel.username==user).first()
+        pending.pendingRequest += num
+        dbSession.add(pending)
+        dbSession.commit()
+
+    @staticmethod
+    def changeIssue(user, num):
+        issue = dbSession.query(userModel).filter(userModel.username==user).first()
+        issue.booksIssued += num
+        dbSession.add(issue)
+        dbSession.commit()

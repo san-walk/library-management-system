@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Book</title>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Wellcome ADMIN, you are going to add a new book on the Library Portal</h1>
+    <h2>Adding New Book info:</h2>
+    <form id="newBook" action="http://localhost:5000/books/add-new" method="POST">
+        <p>Book Name:</p>
+        <input type="text" name="bookName" id="bookName"><br>
+        <p>Author Name:</p>
+        <input type="text" name="author" id="author"><br>
+        <p>Reference Number:</p>
+        <input type="text" name="referenceNumber" id="referenceNumber"><br>
+        <p>Quantity:</p>
+        <input type="text" name="quantity" id="quantity"><br>
+        <p class="error" id="error-message"></p><br>
+        <input type="submit" name="submit" value="submit">
+    </form><br>
+    <script>
+        const form = document.getElementById('newBook')
+        const showError = document.getElementById('error-message')
+
+        // function to check the validity of the input credentials
+        function validateForm(event) {
+            let errors = [];
+            showError.innerHTML = '';
+
+            const name = document.getElementById('bookName').value;
+            if (!name) {
+                errors.push('Please enter the BOOK NAME.');
+            }
+
+            const author = document.getElementById('author').value;
+            if (!author) {
+                errors.push('Please enter the AUTHOR NAME.');
+            }
+
+            const reference = document.getElementById('referenceNumber').value;
+            if (!reference) {
+                errors.push('Please enter the REFERENCE NUMBER.');
+            }
+
+            const quan = document.getElementById('quantity').value;
+            if (!quan) {
+                errors.push('Please enter the QUANTITY.');
+            }
+
+
+            // if there are errors, show them 
+            if (errors.length > 0) {
+                event.preventDefault();
+                showError.innerHTML = errors.join('<br>');
+            }
+        }
+        form.addEventListener('submit', validateForm);
+    </script>
+    <p>Click <b>SUBMIT</b> button  after you ensure the details.</p>
+    <p>You have to fill all the fields for the new book.</p><br>
+</body>
+</html>
