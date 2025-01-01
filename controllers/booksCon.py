@@ -18,6 +18,10 @@ class booksController():
         booksData = bookModel.getAllBooks()
         user = session['username']
         booksReq = reqModel.getUserRequest(user)
+        if 'error' in session:
+            error = session['error']
+            session.pop('error', None)
+            return render_template('booksPage.html', books=booksData, requests=booksReq, err=error)
         return render_template('booksPage.html', books=booksData, requests=booksReq)
 
     def getAddBook():
@@ -53,9 +57,14 @@ class booksController():
     def deleteBookByID():
         book = request.form
         bookId = book['id']
-        bookModel.deleteBook(bookId)
-        # also delete requests for that bookID
+        reqs = reqModel.getAllReqByBook(bookId)
+        if reqs:
+            for req in reqs:
+                print (req.bookId, ' this book is issued by ------> ', req.issuedBy, ' and the book name is ------> ', req.bookName)
+                _user = req.issuedBy
+                userModel.changeIssue(_user, -1)
         reqModel.deleteReqByBookID(bookId)
+        bookModel.deleteBook(bookId)
         return redirect('/admin')
 
 
@@ -69,10 +78,8 @@ class booksController():
             userModel.changePending(user, 1)
         else:
             error = "Request another book, you already requsted this book!"
-            booksData = bookModel.getAllBooks()
-            user = session['username']
-            booksReq = reqModel.getUserRequest(user)
-            return render_template('booksPage.html', books=booksData, requests=booksReq, err=error)
+            session['error'] = error
+            return redirect(url_for('.books'))
         return redirect('/books')
     
     def returnBook():

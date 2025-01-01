@@ -98,3 +98,21 @@ class reqModel(Base):
         action.returned = True
         dbSession.add(action)
         dbSession.commit()
+
+    @staticmethod
+    def getAllReqByUser(_user):
+        allReq = dbSession.query(reqModel).filter(reqModel.issuedBy==_user, reqModel.approval==True, reqModel.returned==False).all()
+        if allReq:
+            print ('all requests ------> ', allReq)
+            print ('lenght of the request is ------> ', len(allReq))
+            return allReq
+        return None
+    
+    @staticmethod
+    def getAllReqByBook(_id):
+        allReq = dbSession.query(reqModel).filter(reqModel.bookId==_id, reqModel.approval==True, reqModel.returned==False).all()
+        if allReq:
+            print ('all requests -------> ', allReq)
+            print ('length of the request is -------> ', len(allReq))
+            return allReq
+        return None 

@@ -1,4 +1,4 @@
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, request, session, url_for
 from models.userModel import userModel
 from models.bookModel import bookModel
 from models.requestModel import reqModel
@@ -14,6 +14,10 @@ class adminController():
         userData = userModel.getAllUsers()
         booksData = bookModel.getAllBooks()
         allReqs = reqModel.getAllRequest()
+        if 'error' in session:
+            error = session['error']
+            session.pop('error', None)
+            return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs, err=error)
         return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs)
     
     # to get update page
@@ -33,9 +37,16 @@ class adminController():
     
     # delete user
     def deleteUser(user):
-        userModel.delete(user)
+        allReqs = reqModel.getAllReqByUser(user)
+        if allReqs:
+            for req in allReqs:
+                print (req.issuedBy, ' book id is -----> ', req.bookId, ' and book name is ------> ', req.bookName)
+                _id = req.bookId
+                bookModel.changeIssue(_id, -1)
+                bookModel.changeAvailabe(_id, 1)
         # requests regarding this user also deletes
         reqModel.deleteReqByUser(user)
+        userModel.delete(user)
         return redirect('/admin')
 
 
@@ -53,10 +64,8 @@ class adminController():
             reqModel.changeActionNApproval(reqData['snum'], True, True)
         else:
             error = "Can't approve request, the book is not available!"
-            userData = userModel.getAllUsers()
-            booksData = bookModel.getAllBooks()
-            allReqs = reqModel.getAllRequest()
-            return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs, err=error)
+            session['error'] = error
+            return redirect(url_for('.admin'))
         return redirect('/admin')
     
     # reject request function
