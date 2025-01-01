@@ -13,14 +13,13 @@
 <body>
     <h1>Wellcome ADMIN, you are going to add a new book on the Library Portal</h1>
     <h2>Adding New Book info:</h2>
-    <form id="newBook" action="http://localhost:5000/books/add-new" method="POST">
+    <form id="newBook" action="http://localhost:5000/books/update/confirm" method="POST">
+        <input type="hidden" name="id" value="{{ book.id }}">
         <p>Book Name:</p>
-        <input type="text" name="bookName" id="bookName"><br>
+        <input type="text" name="bookName" id="bookName" value="{{ book.name }}"><br>
         <p>Author Name:</p>
-        <input type="text" name="author" id="author"><br>
-        <p>Reference Number:</p>
-        <input type="text" name="referenceNumber" id="referenceNumber"><br>
-        <p>Quantity:</p>
+        <input type="text" name="author" id="author" value="{{ book.author }}"><br>
+        <p>Add Quantity:</p>
         <input type="text" name="quantity" id="quantity"><br>
         <p class="error" id="error-message"></p><br>
         <input type="submit" name="submit" value="submit">
@@ -39,22 +38,17 @@
 
             const name = document.getElementById('bookName').value;
             if (!name) {
-                errors.push('Please enter the BOOK NAME.');
+                errors.push('Please enter the BOOK NAME or RELOAD the page old values would be recovered.');
             }
 
             const author = document.getElementById('author').value;
             if (!author) {
-                errors.push('Please enter the AUTHOR NAME.');
-            }
-
-            const reference = document.getElementById('referenceNumber').value;
-            if (!reference) {
-                errors.push('Please enter the REFERENCE NUMBER.');
+                errors.push('Please enter the AUTHOR NAME or RELOAD the page old values would be recovered.');
             }
 
             const quan = document.getElementById('quantity').value;
             if (!quan) {
-                errors.push('Please enter the QUANTITY.');
+                errors.push('Please enter integer value "0" if you don\'t want to add quantity of the books.');
             }
 
 

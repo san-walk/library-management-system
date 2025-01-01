@@ -29,6 +29,11 @@ class booksController():
             # get data from the form 
             newBook = request.form
             print (newBook)
+            print (newBook['referenceNumber'])
+            # check for the existing reference number
+            error = bookModel.CheckReferenceNum(newBook['referenceNumber'])
+            if error:
+                return render_template('/newBookPage.html', err=error)
             # store the data in database
             bookModel.addNewBook(newBook)
             return redirect('/admin')
@@ -36,6 +41,23 @@ class booksController():
         except Exception as e:
             dbSession.roolback()
             print (f'error {e}')
+
+    def getUpdateBook(book):
+        return render_template('updateBookPage.html', book=book)
+    
+    def postUpdateBook():
+        book = request.form
+        bookId = book['id']
+        bookModel.update(bookId, book)
+        return redirect('/admin')
+    
+    def deleteBookByID():
+        book = request.form
+        bookId = book['id']
+        bookModel.deleteBook(bookId)
+        # also delete requests for that bookID
+        reqModel.deleteReqByBookID(bookId)
+        return redirect('/admin')
 
 
     def issueBook():

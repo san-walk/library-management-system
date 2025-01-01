@@ -73,3 +73,34 @@ class validate():
             return errors
         else:
             return None
+        
+    # validation for the update data
+    def validateUpdateData(form):
+        errors = []
+
+        if not form['firstName']:
+            errors.append('FIRSTNAME is not given!')
+        if not form['lastName']:
+            errors.append('LASTNAME is not given!')
+        if not form['email']:
+            errors.append('EMAIL is not given!')
+        if not form['phoneNumber']:
+            errors.append('PHONE NUMBER is not given!')
+
+        # Validate email
+        email = form['email']
+        if email and not validate.isValidEmail(email):
+            errors.append('Email is not valid')
+
+        # Validate phone number
+        phone = form['phoneNumber']
+        if phone and not validate.isValidPhone(phone):
+            errors.append('Enter a valid 10-digit phone number')
+
+
+        # Return the list of errors (if any)
+        if errors:
+            print (errors)
+            return errors
+        else:
+            return None

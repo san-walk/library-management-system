@@ -56,6 +56,17 @@ class reqModel(Base):
             print ("user didn't have any requests yet")
 
     @staticmethod
+    def deleteReqByBookID(_bookID):
+        dbSession.query(reqModel).filter(reqModel.bookId==_bookID).delete()
+        dbSession.commit()
+        
+    @staticmethod
+    def deleteReqByUser(_user):
+        dbSession.query(reqModel).filter(reqModel.issuedBy==_user).delete()
+        dbSession.commit()
+
+    
+    @staticmethod
     def getReturnableReq(user):
         print ('going to get requests which is approved and may be i am going to return')
         reqs = dbSession.query(reqModel).filter(reqModel.issuedBy==user, reqModel.approval==True, reqModel.returned!=True).all()

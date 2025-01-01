@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        td {
+        th, td {
             padding-left: 15px;
             padding-right: 15px;
         }
@@ -34,19 +34,23 @@
                 <td>{{ book.quantity }}</td>
                 <td>{{ book.issued }}</td>
                 <td>{{ book.available }}</td>
-                <td>
-                    <form action="http://localhost:5000/books/issue" method="POST" style="display:inline;">
-                        <input type="hidden" name="bookName" value="{{ book.bookName }}">
-                        <input type="hidden" name="issuedBy" value="{{ session['username'] }}">
-                        <input type="hidden" name="referenceNumber" value="{{ book.referenceNumber }}">
-                        <button type="submit">Issue Book</button>
-                    </form>
-                </td>
+                {% if book.available <= 0 %}
+                    <td>Currently Unavailable</td>
+                {% else %}
+                    <td>
+                        <form action="http://localhost:5000/books/issue" method="POST" style="display:inline;">
+                            <input type="hidden" name="bookName" value="{{ book.bookName }}">
+                            <input type="hidden" name="issuedBy" value="{{ session['username'] }}">
+                            <input type="hidden" name="referenceNumber" value="{{ book.referenceNumber }}">
+                            <button type="submit">Issue Book</button>
+                        </form>
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>
 
-    {% if approves %}
+    <!-- {% if approves %}
         <h3>Want to return books: </h3>
         <table border="1">
             <tr>
@@ -69,7 +73,7 @@
                 </tr>
             {% endfor %}
         </table>
-    {% endif %}
+    {% endif %} -->
 
     {% if requests %}
         <h3>Your Requests: </h3>
@@ -77,16 +81,26 @@
             <tr>
                 <th>Book Name</th>
                 <th>Book ID</th>
-                <th>Action</th>
-                <th>Approval</th>
-                <!-- <th>Action</th> -->
+                <th>Status</th>
             </tr>
             {% for request in requests %}
                 <tr>
                     <td>{{ request.bookName }}</td>
                     <td>{{ request.bookId }}</td>
-                    <td>{{ request.action }}</td>
-                    <td>{{ request.approval }}</td>
+                    {% if request.action == None %}
+                        <td>Pending</td>
+                    {% elif request.action == True and request.approval == False %}
+                        <td>Rejected</td>
+                    {% else %}
+                        <td>
+                            <form action="http://localhost:5000/books/return" method="POST" style="display:inline;">
+                                <input type="hidden" name="bookName" value="{{ request.bookName }}">
+                                <input type="hidden" name="issuedBy" value="{{ session['username'] }}">
+                                <input type="hidden" name="bookId" value="{{ request.bookId }}">
+                                <button type="submit">RETURN</button>
+                            </form>
+                        </td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </table>

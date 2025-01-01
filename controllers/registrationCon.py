@@ -21,10 +21,6 @@ class registrationController():
         if 'username' in session:
             print ('we got into the session for the getregistration form! registration controller........')
             return validate.ifSession(session)
-        
-            # print ('we got a session.')
-            # isUser = userModel.getAdmin(session['username'])
-            # return redirect('/admin') if isUser else redirect('/books')
         return render_template('registrationPage.html')
     
     # post the registration data on the database

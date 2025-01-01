@@ -20,10 +20,6 @@ class loginController():
     def get():
         if 'username' in session:
             return validate.ifSession(session) 
-        
-            # print ('we got a session.')
-            # isUser = userModel.getAdmin(session['username'])
-            # return redirect('/admin') if isUser else redirect('/books')
         return render_template('loginPage.html')
 
     # post login function to verify user/admin 

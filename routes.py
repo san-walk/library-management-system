@@ -72,6 +72,34 @@ def postBook():
     return booksController.postAddBook()
 
 '''
+Date: 1st Jan 2025
+Purpose: route to get books update page
+'''
+@main.route('/books/update', methods = ['POST'])
+def getUpdateBookPage():
+    book = request.form
+    print (book)
+    return booksController.getUpdateBook(book)
+
+'''
+Date: 1st Jan 2025
+Purpose: route to post the books update
+'''
+@main.route('/books/update/confirm', methods = ['POST'])
+def postUpdateBook():
+        # bookId = request.form.get('id')
+        return booksController.postUpdateBook()
+
+'''
+Date: 1st Jan 2025
+Purpose: route to delete the book
+'''
+@main.route('/books/delete', methods = ['POST'])
+def deleteBook():
+    return booksController.deleteBookByID()
+
+
+'''
 Date: 31st Dec 2024
 Purpose: route used to issue book by user
 '''

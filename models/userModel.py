@@ -73,7 +73,7 @@ class userModel(Base):
         user = dbSession.query(userModel).filter(userModel.username==username).first()
         if not user:
             print ('user not found!')
-            return None
+            return
         print (user)
         user.firstName = updateCrentials['firstName']
         user.lastName = updateCrentials['lastName']
@@ -81,14 +81,12 @@ class userModel(Base):
         user.phoneNumber = updateCrentials['phoneNumber']
         dbSession.add(user)
         dbSession.commit()
-        return user
     
     # delete users with username
     @staticmethod
     def delete(username):
-        dele = dbSession.query(userModel).filter(userModel.username == username).delete()
+        dbSession.query(userModel).filter(userModel.username == username).delete()
         dbSession.commit()
-        return dele
     
     @staticmethod
     def changePending(user, num):
