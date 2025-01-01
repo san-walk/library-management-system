@@ -9,6 +9,9 @@
             padding-left: 15px;
             padding-right: 15px;
         }
+        .error {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -50,30 +53,9 @@
         {% endfor %}
     </table>
 
-    <!-- {% if approves %}
-        <h3>Want to return books: </h3>
-        <table border="1">
-            <tr>
-                <th>Book Name</th>
-                <th>Book ID</th>
-                <th>Click to return</th>
-            </tr>
-            {% for approve in approves %}
-                <tr>
-                    <td>{{ approve.bookName }}</td>
-                    <td>{{ approve.bookId }}</td>
-                    <td>
-                        <form action="http://localhost:5000/books/return" method="POST" style="display:inline;">
-                            <input type="hidden" name="bookName" value="{{ approve.bookName }}">
-                            <input type="hidden" name="issuedBy" value="{{ session['username'] }}">
-                            <input type="hidden" name="bookId" value="{{ approve.bookId }}">
-                            <button type="submit">RETURN</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% endif %} -->
+    {% if err %}
+        <p class="error">{{ err }}</p>
+    {% endif %}
 
     {% if requests %}
         <h3>Your Requests: </h3>
@@ -91,6 +73,8 @@
                         <td>Pending</td>
                     {% elif request.action == True and request.approval == False %}
                         <td>Rejected</td>
+                    {% elif request.returned == True %}
+                        <td>Returned</td>
                     {% else %}
                         <td>
                             <form action="http://localhost:5000/books/return" method="POST" style="display:inline;">

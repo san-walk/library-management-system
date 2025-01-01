@@ -17,9 +17,8 @@ class booksController():
     def get():
         booksData = bookModel.getAllBooks()
         user = session['username']
-        retun = reqModel.getReturnableReq(user)
         booksReq = reqModel.getUserRequest(user)
-        return render_template('booksPage.html', books=booksData, approves=retun, requests=booksReq)
+        return render_template('booksPage.html', books=booksData, requests=booksReq)
 
     def getAddBook():
         return render_template('newBookPage.html')
@@ -63,9 +62,17 @@ class booksController():
     def issueBook():
         print ("issue raised! from the booksController.py")
         newReq = request.form
-        reqModel.addRequest(newReq)
         user = session['username']
-        userModel.changePending(user, 1)
+        ifReq = reqModel.checkIssue(newReq['referenceNumber'], user)
+        if ifReq == None:
+            reqModel.addRequest(newReq)
+            userModel.changePending(user, 1)
+        else:
+            error = "Request another book, you already requsted this book!"
+            booksData = bookModel.getAllBooks()
+            user = session['username']
+            booksReq = reqModel.getUserRequest(user)
+            return render_template('booksPage.html', books=booksData, requests=booksReq, err=error)
         return redirect('/books')
     
     def returnBook():

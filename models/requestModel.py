@@ -77,6 +77,13 @@ class reqModel(Base):
             print ("user didn't have any returnable requests.")
 
     @staticmethod
+    def checkIssue(_id, _user):
+        isReq = dbSession.query(reqModel).filter(reqModel.bookId==_id, reqModel.issuedBy==_user).first()
+        print ('your request will be ------> ', isReq)
+        return isReq
+        # print (isReq[0])
+
+    @staticmethod
     def changeActionNApproval(_snum, _action, _approval):
         action = dbSession.query(reqModel).filter(reqModel.snum==_snum).first()
         action.action = _action
