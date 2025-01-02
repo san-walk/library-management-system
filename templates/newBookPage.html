@@ -37,6 +37,8 @@
             let errors = [];
             showError.innerHTML = '';
 
+            const naturalNumberRegex = /^[1-9]\d*$/;
+
             const name = document.getElementById('bookName').value;
             if (!name) {
                 errors.push('Please enter the BOOK NAME.');
@@ -55,6 +57,8 @@
             const quan = document.getElementById('quantity').value;
             if (!quan) {
                 errors.push('Please enter the QUANTITY.');
+            } else if (!naturalNumberRegex.test(quan)) {
+                errors.push('Please enter a positive integer.')
             }
 
 

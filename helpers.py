@@ -25,6 +25,10 @@ class validate():
         phoneRegex = r'^\d{10}$'
         return re.match(phoneRegex, phone)
     
+    def naturalNum(num):
+        naturalNumRegex = r'^[1-9]\d*$'
+        return re.match(naturalNumRegex, num)
+    
 
     # this is the function, in which i want help
     # done 

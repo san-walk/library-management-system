@@ -23,6 +23,7 @@ class reqModel(Base):
     returned = Column(Boolean, default=None)
 
 
+    # get all the requests with this function where action is not taken to approve/reject
     @staticmethod
     def getAllRequest():
         reqData = dbSession.query(reqModel).filter(reqModel.action==None).all()
@@ -31,6 +32,7 @@ class reqModel(Base):
         else: 
             return None
 
+    # add a new req raised by the user to get book from the library
     @staticmethod
     def addRequest(newReq):
         print ("adding a new request for the book issue! from the reqModel.py")
@@ -45,6 +47,7 @@ class reqModel(Base):
         dbSession.commit()
         print ("data successfully commited!")
 
+    # get the requests for the particular user
     @staticmethod
     def getUserRequest(user):
         print ('going to retreve user requests')
@@ -55,17 +58,19 @@ class reqModel(Base):
         else:
             print ("user didn't have any requests yet")
 
+    # delete the request by bookID
     @staticmethod
     def deleteReqByBookID(_bookID):
         dbSession.query(reqModel).filter(reqModel.bookId==_bookID).delete()
         dbSession.commit()
         
+    # delete the request by userID
     @staticmethod
     def deleteReqByUser(_user):
         dbSession.query(reqModel).filter(reqModel.issuedBy==_user).delete()
         dbSession.commit()
 
-    
+    # get all the requests of the approved books which can be return
     @staticmethod
     def getReturnableReq(user):
         print ('going to get requests which is approved and may be i am going to return')
@@ -76,13 +81,22 @@ class reqModel(Base):
         else:
             print ("user didn't have any returnable requests.")
 
+    # function used to get the issued books by a particular user
     @staticmethod
     def checkIssue(_id, _user):
-        isReq = dbSession.query(reqModel).filter(reqModel.bookId==_id, reqModel.issuedBy==_user).first()
-        print ('your request will be ------> ', isReq)
-        return isReq
-        # print (isReq[0])
+        isPending = dbSession.query(reqModel).filter(reqModel.bookId==_id, reqModel.issuedBy==_user, reqModel.action==None, reqModel.approval==None, reqModel.returned==None).first()
+        isReturned = dbSession.query(reqModel).filter(reqModel.bookId==_id, reqModel.issuedBy==_user, reqModel.action==True, reqModel.approval==True, reqModel.returned==False).first()
+        message = ''
+        if isPending:
+            message = 'You have a pending request!'
+        elif isReturned:
+            message = 'Book was Issued return it first!'
+        else:
+            message = 'Issue requested! wait for admin to confirm.'
+            return ( message, True)
+        return ( message, False )
 
+    # function used to change the action on the requests
     @staticmethod
     def changeActionNApproval(_snum, _action, _approval):
         action = dbSession.query(reqModel).filter(reqModel.snum==_snum).first()
@@ -92,13 +106,17 @@ class reqModel(Base):
         dbSession.add(action)
         dbSession.commit()
 
+    # function is used to return the book
     @staticmethod
     def changeReturn(user, _id):
-        action = dbSession.query(reqModel).filter(reqModel.issuedBy==user, reqModel.bookId==_id).first()
-        action.returned = True
-        dbSession.add(action)
+        actions = dbSession.query(reqModel).filter(reqModel.issuedBy==user, reqModel.bookId==_id).all()
+        for action in actions:
+            if not action.returned:
+                action.returned = True
+                dbSession.add(action)
         dbSession.commit()
 
+    # function is used to get all requests by a user
     @staticmethod
     def getAllReqByUser(_user):
         allReq = dbSession.query(reqModel).filter(reqModel.issuedBy==_user, reqModel.approval==True, reqModel.returned==False).all()
@@ -108,6 +126,7 @@ class reqModel(Base):
             return allReq
         return None
     
+    # function is used to get all requests by a 
     @staticmethod
     def getAllReqByBook(_id):
         allReq = dbSession.query(reqModel).filter(reqModel.bookId==_id, reqModel.approval==True, reqModel.returned==False).all()

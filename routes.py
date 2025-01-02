@@ -75,8 +75,10 @@ def postBook():
 Date: 1st Jan 2025
 Purpose: route to get books update page
 '''
-@main.route('/books/update', methods = ['POST'])
+@main.route('/books/update', methods = ['GET', 'POST'])
 def getUpdateBookPage():
+    if request.method == 'GET':
+        return redirect('/')
     book = request.form
     print (book)
     return booksController.getUpdateBook(book)
@@ -85,17 +87,20 @@ def getUpdateBookPage():
 Date: 1st Jan 2025
 Purpose: route to post the books update
 '''
-@main.route('/books/update/confirm', methods = ['POST'])
+@main.route('/books/update/confirm', methods = ['GET', 'POST'])
 def postUpdateBook():
-        # bookId = request.form.get('id')
-        return booksController.postUpdateBook()
+    if request.method == 'GET':
+        return redirect('/')
+    return booksController.postUpdateBook()
 
 '''
 Date: 1st Jan 2025
 Purpose: route to delete the book
 '''
-@main.route('/books/delete', methods = ['POST'])
+@main.route('/books/delete', methods = ['GET', 'POST'])
 def deleteBook():
+    if request.method == 'GET':
+        return redirect('/')
     return booksController.deleteBookByID()
 
 
@@ -103,16 +108,20 @@ def deleteBook():
 Date: 31st Dec 2024
 Purpose: route used to issue book by user
 '''
-@main.route('/books/issue', methods = ['POST'])
+@main.route('/books/issue', methods = ['GET', 'POST'])
 def issueBook():
+    if request.method == 'GET':
+        return redirect('/')
     return booksController.issueBook()
 
 '''
 Date: 31st Dec 2024
 Purpose: route used to return a book by user
 '''
-@main.route('/books/return', methods = ['POST'])
+@main.route('/books/return', methods = ['GET', 'POST'])
 def returnBook():
+    if request.method == 'GET':
+        return redirect('/')
     return booksController.returnBook()
 
 
@@ -138,10 +147,14 @@ def simple():
 Date: 28th Dec 2024
 Purpose: get route for updating the user
 '''
-@main.route('/update', methods = ['POST'])
+@main.route('/update', methods = ['GET', 'POST'])
 def update():
+    if request.method == 'GET':
+        return redirect('/')
     user = request.form
     print (user['username'])
+    if not user:
+        return redirect('/')
     return adminController.getUpdate(user)
     
 
@@ -149,8 +162,10 @@ def update():
 Date: 28th Dec 2024
 Purpose: this route is used to post any update then redirect to the admins route
 '''
-@main.route('/update/confirm', methods = ['POST'])
+@main.route('/update/confirm', methods = ['GET', 'POST'])
 def submitUpdate():
+    if request.method == 'GET':
+        return redirect('/')
     user = request.form.get('username')
     return adminController.postUpdate(user)
 
@@ -159,8 +174,10 @@ def submitUpdate():
 Date: 28th Dec 2024
 Purpose: this route used to delete a user, only admins can delete users
 '''
-@main.route('/delete-user', methods = ['POST'])
+@main.route('/delete-user', methods = ['GET', 'POST'])
 def deleteUser():
+    if request.method == 'GET':
+        return redirect('/')
     user = request.form.get('username')
     return adminController.deleteUser(user)
 
@@ -169,16 +186,20 @@ def deleteUser():
 Date: 31st Dec 2024
 Purpose: post route used to approve issued request for book
 '''
-@main.route('/approve', methods = ['POST'])
+@main.route('/approve', methods = ['GET', 'POST'])
 def approve():
+    if request.method == 'GET':
+        return redirect('/')
     return adminController.approveReq()
 
 '''
 Date: 31st Dec 2024
 Purpose: post route used to reject issued request for book
 '''
-@main.route('/reject', methods = ['POST'])
+@main.route('/reject', methods = ['GET', 'POST'])
 def reject():
+    if request.method == 'GET':
+        return redirect('/')
     return adminController.rejectReq()
 
 # testing route

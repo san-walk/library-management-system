@@ -11,14 +11,16 @@ Purpose: user controller class renders user page
 class adminController():
     # to get all
     def get():
-        userData = userModel.getAllUsers()
-        booksData = bookModel.getAllBooks()
-        allReqs = reqModel.getAllRequest()
-        if 'error' in session:
-            error = session['error']
-            session.pop('error', None)
-            return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs, err=error)
-        return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs)
+        if 'username' in session and session['admin'] == True:
+            userData = userModel.getAllUsers()
+            booksData = bookModel.getAllBooks()
+            allReqs = reqModel.getAllRequest()
+            if 'error' in session:
+                error = session['error']
+                session.pop('error', None)
+                return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs, err=error)
+            return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs)
+        return 'You are not logedin as admin!<br><a href="http://localhost:5000/login">Click here to LOGIN</a>'
     
     # to get update page
     def getUpdate(user):
@@ -37,6 +39,7 @@ class adminController():
     
     # delete user
     def deleteUser(user):
+        # checks for the books user issued 
         allReqs = reqModel.getAllReqByUser(user)
         if allReqs:
             for req in allReqs:
@@ -63,8 +66,7 @@ class adminController():
             # update request table
             reqModel.changeActionNApproval(reqData['snum'], True, True)
         else:
-            error = "Can't approve request, the book is not available!"
-            session['error'] = error
+            session['error'] = "Can't approve request, the book is not available!"
             return redirect(url_for('.admin'))
         return redirect('/admin')
     

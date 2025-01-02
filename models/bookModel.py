@@ -28,6 +28,7 @@ class bookModel(Base):
         booksData = dbSession.query(bookModel).all()
         return booksData
     
+    # function to add a new book
     @staticmethod
     def addNewBook(newBook):
         print ("data of new book is going to fillin the bookModel")
@@ -43,6 +44,7 @@ class bookModel(Base):
         dbSession.commit()
         print ('data is commited successfully!')
 
+    # function to check the reference number, bcos it is unique throughout the database
     def CheckReferenceNum(bookID):
         book = dbSession.query(bookModel).filter(bookModel.referenceNumber==bookID).first()
         if book:
@@ -52,8 +54,10 @@ class bookModel(Base):
         else:
             return None
 
+    # update the book name, author, quantity of the book
     @staticmethod
     def update(bookID, updateCrentials):    # TODO : Add validations here too similar to register user
+        # if book is available to update check
         book = dbSession.query(bookModel).filter(bookModel.referenceNumber==bookID).first()
         if not book:
             print ('user not found!')
@@ -61,23 +65,32 @@ class bookModel(Base):
         print (book)
         book.bookName = updateCrentials['bookName']
         book.author = updateCrentials['author']
+        # check for the quantity of the books if you are going reduce
         quan = int(updateCrentials['quantity'])
+        message = ''
         if (quan < 0 and abs(quan) <= book.available) or quan > 0:
             book.quantity += quan
             book.available += quan
+        elif quan == 0:
+            message = ''
         else: 
-            print ('available quantity is less than the deducted quantity!')
+            message = 'Update quantity is invalid! Try again after seeing the available quantity.'
+            # dbSession.rollback()
+            # return message
         dbSession.add(book)
         dbSession.commit()
         if book.quantity == 0:
             bookModel.deleteBook(bookID)
-        
+        return message
+    
+    # delete book by its ID
     @staticmethod
     def deleteBook(bookId):
         dbSession.query(bookModel).filter(bookModel.referenceNumber==bookId).delete()
         dbSession.commit()
         print ('book is deleted!')
 
+    # change the quantity of the book from here
     @staticmethod
     def changeQuantity(id, num):
         quan = dbSession.query(bookModel).filter(bookModel.referenceNumber==id).first()
@@ -85,6 +98,7 @@ class bookModel(Base):
         dbSession.add(quan)
         dbSession.commit()
 
+    # change the issue field of the book by bookID
     @staticmethod
     def changeIssue(id, num):
         issue = dbSession.query(bookModel).filter(bookModel.referenceNumber==id).first()
@@ -92,6 +106,7 @@ class bookModel(Base):
         dbSession.add(issue)
         dbSession.commit()
 
+    # change the available field of the book by bookID
     @staticmethod
     def changeAvailabe(id, num):
         issue = dbSession.query(bookModel).filter(bookModel.referenceNumber==id).first()

@@ -1,5 +1,5 @@
 from werkzeug.security import check_password_hash
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, url_for
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
 from connection import engine
@@ -19,8 +19,12 @@ class loginController():
     # get login page where session is also checked
     def get():
         if 'username' in session:
-            return validate.ifSession(session) 
-        return render_template('loginPage.html')
+            return validate.ifSession(session)
+        error = ''
+        if 'error' in session:
+            error = session['error']
+            session.pop('error', None)
+        return render_template('loginPage.html', err=error)
 
     # post login function to verify user/admin 
     def post():
@@ -30,22 +34,18 @@ class loginController():
             print (loginCredentials)
 
             # check username from the class function
-            confirmUser = False
-            userN = loginCredentials['username']
-            name = userModel.getPassword(userN)
-            if name:
-                print ('username got!')
-                confirmUser = True
-            else: 
-                print ('username incorrect!')
-
+            confirmUser = True
+            isUser = userModel.getUserData(loginCredentials['username'])
+            if not isUser:
+                confirmUser = False
+                session['error'] = "Username not found!"
+                return redirect(url_for('.login'))
 
             # check password from the class function
             confirmPassword = False
             enteredPassword = loginCredentials['password']
-            # storedPassword = userModel.getPassword(userN)      # TODO : Duplicate query
-            userData = userModel.getPassword(userN)
-            if userData[0] and check_password_hash(userData[0], enteredPassword):
+            storedPassword = isUser.password
+            if check_password_hash(storedPassword, enteredPassword):
                 print ('password matched!')
                 confirmPassword = True
             else:
@@ -65,8 +65,8 @@ class loginController():
                 return redirect('/admin') if userIsAdmin else redirect('/books')
                 
             else:
-                err = "Invalid Credentials!"
-                return render_template('loginPage.html', err = err)
+                session['error'] = "Incorrect password!"
+                return redirect('/login')
 
         except Exception as e:
             dbSession.rollback()
@@ -80,7 +80,8 @@ Purpose: this class is resposible for logout, it is not required to define this 
 class logoutController():
     # logout function which clears the session
     def logout():
-        print (session['username'])
-        session.pop('username', None)
-        session.pop('admin', None)
+        if 'username' in session:
+            print (session['username'])
+            session.pop('username', None)
+            session.pop('admin', None)
         return redirect('/login')
