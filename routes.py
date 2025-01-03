@@ -201,8 +201,3 @@ def reject():
     if request.method == 'GET':
         return redirect('/')
     return adminController.rejectReq()
-
-# testing route
-@main.route('/test')
-def test():
-    return userModel.changePending('testtest111', -1)
