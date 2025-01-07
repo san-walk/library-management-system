@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, Integer, Boolean, create_engine, UniqueCo
 from connection import engine, Base
 from sqlalchemy.orm import sessionmaker
 
+
 Session = sessionmaker(engine)
 dbSession = Session()
 
