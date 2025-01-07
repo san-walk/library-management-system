@@ -19,3 +19,10 @@ app.register_blueprint(main)
 
 if __name__ == '__main__':
    app.run(debug = True)
+
+
+
+'''
+Date: 7th Jan 2025
+Command: alaways use 'flask --app app run --port=5542 --debug' to run this app
+'''

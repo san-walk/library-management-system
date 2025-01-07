@@ -6,10 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        th, td {
+        th,
+        td {
             padding-left: 15px;
             padding-right: 15px;
         }
+
         .errors {
             color: red;
         }
@@ -19,144 +21,146 @@
 <body>
     <div class="heading">
         <h2>Wellcome {{ session['username'] }}</h2>
-        <a href="http://localhost:5000/logout">Click here to logout</a><br>
+        <a href="http://localhost:5542/logout">Click here to logout</a><br>
     </div>
     <h3>User List:</h3>
     {% if users %}
-        <table border=1>
-            <tr>
-                <th>S. No.</th>
-                <th>Username</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Books Issued</th>
-                <!-- <th>Pending Request</th> -->
-                <th>Books Returned</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>Update User</th>
-                <th>Delete User</th>
-            </tr>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.snum }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.firstName }}</td>
-                <td>{{ user.lastName }}</td>
-                <td>{{ user.booksIssued }}</td>
-                <!-- <td>{{ user.pendingRequest }}</td> -->
-                <td>{{ user.booksReturned }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.phoneNumber }}</td>
-                <td>
-                    <!-- Add a form to send username to the /update route -->
-                    <form action="http://localhost:5000/update" method="POST" style="display:inline;">
-                        <input type="hidden" name="username" value="{{ user.username }}">
-                        <input type="hidden" name="firstName" value="{{ user.firstName }}">
-                        <input type="hidden" name="lastName" value="{{ user.lastName }}">
-                        <input type="hidden" name="email" value="{{ user.email }}">
-                        <input type="hidden" name="phoneNumber" value="{{ user.phoneNumber }}">
-                        
-                        <button type="submit">Click here</button>
-                    </form>
-                </td>
-                <td>
-                    <form action="http://localhost:5000/delete-user" method="POST" style="display:inline;">
-                        <input type="hidden" name="username" value="{{ user.username }}">
-                        <button type="submit">Delete</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
+    <table border=1>
+        <tr>
+            <th>S. No.</th>
+            <th>Username</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Books Issued</th>
+            <!-- <th>Pending Request</th> -->
+            <th>Books Returned</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+            <th>Update User</th>
+            <th>Delete User</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.snum }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.firstName }}</td>
+            <td>{{ user.lastName }}</td>
+            <td>{{ user.booksIssued }}</td>
+            <!-- <td>{{ user.pendingRequest }}</td> -->
+            <td>{{ user.booksReturned }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.phoneNumber }}</td>
+            <td>
+                <!-- Add a form to send username to the /update route -->
+                <form action="http://localhost:5542/update" method="POST" style="display:inline;">
+                    <input type="hidden" name="username" value="{{ user.username }}">
+                    <input type="hidden" name="firstName" value="{{ user.firstName }}">
+                    <input type="hidden" name="lastName" value="{{ user.lastName }}">
+                    <input type="hidden" name="email" value="{{ user.email }}">
+                    <input type="hidden" name="phoneNumber" value="{{ user.phoneNumber }}">
 
-        </table><br><br><br>
+                    <button type="submit">Click here</button>
+                </form>
+            </td>
+            <td>
+                <form action="http://localhost:5542/delete-user" method="POST" style="display:inline;">
+                    <input type="hidden" name="username" value="{{ user.username }}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table><br><br><br>
     {% endif %}
     <h3>Books List:</h3>
     {% if books %}
-        <table border=1>
-            <tr>
-                <th>S. No.</th>
-                <th>Book Name</th>
-                <th>Author Name</th>
-                <th>Reference No.</th>
-                <th>Quantity</th>
-                <th>Issued</th>
-                <th>Available</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-            {% for book in books %}
-                <tr>
-                    <td>{{ book.snum }}</td>
-                    <td>{{ book.bookName }}</td>
-                    <td>{{ book.author }}</td>
-                    <td>{{ book.referenceNumber }}</td>
-                    <td>{{ book.quantity }}</td>
-                    <td>{{ book.issued }}</td>
-                    <td>{{ book.available }}</td>
-                    <td>
-                        <form action="http://localhost:5000/books/update" method="POST" style="display:inline;">
-                            <input type="hidden" name="name" value="{{ book.bookName }}">
-                            <input type="hidden" name="author" value="{{ book.author }}">
-                            <input type="hidden" name="id" value="{{ book.referenceNumber }}">
-                            <button type="submit">Update</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="http://localhost:5000/books/delete" method="POST" style="display:inline;">
-                            <input type="hidden" name="id" value="{{ book.referenceNumber }}">
-                            <button type="submit">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% else %}
-        <p>No books to show, add books in your library.</p>
+
+    {% if err %}
+    <p class="errors">{{ err }}</p>
     {% endif %}
-    <a href="http://localhost:5000/books/add-new" method="GET">Click here to add new books</a>
+    <table border=1>
+        <tr>
+            <th>S. No.</th>
+            <th>Book Name</th>
+            <th>Author Name</th>
+            <th>Reference No.</th>
+            <th>Quantity</th>
+            <th>Issued</th>
+            <th>Available</th>
+            <th>Update</th>
+            <th>Delete</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.snum }}</td>
+            <td>{{ book.bookName }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.referenceNumber }}</td>
+            <td>{{ book.quantity }}</td>
+            <td>{{ book.issued }}</td>
+            <td>{{ book.available }}</td>
+            <td>
+                <form action="http://localhost:5542/books/update" method="POST" style="display:inline;">
+                    <input type="hidden" name="name" value="{{ book.bookName }}">
+                    <input type="hidden" name="author" value="{{ book.author }}">
+                    <input type="hidden" name="id" value="{{ book.referenceNumber }}">
+                    <button type="submit">Update</button>
+                </form>
+            </td>
+            <td>
+                <form action="http://localhost:5542/books/delete" method="POST" style="display:inline;">
+                    <input type="hidden" name="id" value="{{ book.referenceNumber }}">
+                    <button type="submit">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No books to show, add books in your library.</p>
+    {% endif %}
+    <a href="http://localhost:5542/books/add-new" method="GET">Click here to add new books</a>
 
     <h3>All Requests: </h3>
     {% if requests %}
-        <table border="1">
-            <tr>
-                <th>Book Name</th>
-                <th>Issued By</th>
-                <th>Book ID</th>
-                <th>Action</th>
-            </tr>
-            {% for request in requests %}
-                <tr>
-                    <td>{{ request.bookName }}</td>
-                    <td>{{ request.issuedBy }}</td>
-                    <td>{{ request.bookId }}</td>
-                    <td>
-                        <form action="http://localhost:5000/approve" method="POST" style="display:inline;">
-                            <input type="hidden" name="bookId" value="{{ request.bookId }}">
-                            <input type="hidden" name="issuedBy" value="{{ request.issuedBy }}">
-                            <input type="hidden" name="snum" value="{{ request.snum }}">
-                            <button type="submit">Approve</button>
-                        </form>
-                    </td>
-                    <td>
-                        <form action="http://localhost:5000/reject" method="POST" style="display:inline;">
-                            <input type="hidden" name="bookId" value="{{ request.bookId }}">
-                            <input type="hidden" name="issuedBy" value="{{ request.issuedBy }}">
-                            <input type="hidden" name="snum" value="{{ request.snum }}">
-                            <button type="submit">Reject</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endfor %}
-            {% if err %}
-                <p class="errors">{{ err }}</p>
-            {% endif %}
-        </table>
+    <table border="1">
+        <tr>
+            <th>Book Name</th>
+            <th>Issued By</th>
+            <th>Book ID</th>
+            <th>Action</th>
+        </tr>
+        {% for request in requests %}
+        <tr>
+            <td>{{ request.bookName }}</td>
+            <td>{{ request.issuedBy }}</td>
+            <td>{{ request.bookId }}</td>
+            <td>
+                <form action="http://localhost:5542/approve" method="POST" style="display:inline;">
+                    <input type="hidden" name="bookId" value="{{ request.bookId }}">
+                    <input type="hidden" name="issuedBy" value="{{ request.issuedBy }}">
+                    <input type="hidden" name="snum" value="{{ request.snum }}">
+                    <button type="submit">Approve</button>
+                </form>
+            </td>
+            <td>
+                <form action="http://localhost:5542/reject" method="POST" style="display:inline;">
+                    <input type="hidden" name="bookId" value="{{ request.bookId }}">
+                    <input type="hidden" name="issuedBy" value="{{ request.issuedBy }}">
+                    <input type="hidden" name="snum" value="{{ request.snum }}">
+                    <button type="submit">Reject</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </table>
     {% else %}
-        <p>You didn't haave any pending requests now.</p>
+    <p>You didn't haave any pending requests now.</p>
     {% endif %}
 
-    
+
 </body>
 
 </html>
