@@ -1,10 +1,16 @@
 from flask import Flask, request, redirect
 from routes import main
 from config import SECRETKEY
+from tasks import make_celery
 
 
 app = Flask(__name__)   # create a flask app
 app.secret_key = SECRETKEY
+
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+celery = make_celery(app)
 
 '''
 Date: 29th Dec 2024
