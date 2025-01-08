@@ -1,4 +1,10 @@
 from celery import Celery
+from app import app
+
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+
 
 def make_celery(app):
     celery = Celery(
@@ -8,3 +14,10 @@ def make_celery(app):
     )
     celery.conf.update(app.config)
     return celery
+
+celery = make_celery(app)
+
+
+@celery.task
+def add_numbers(a, b):
+   return a+b
