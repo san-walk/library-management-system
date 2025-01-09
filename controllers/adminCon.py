@@ -35,6 +35,12 @@ class adminController():
         if error:
             return render_template('updatePage.html', err=error[0])
         userModel.update(user, formData)
+        # send email task after updatation
+        sendTo = formData['email']
+        mailSubject = 'Your data has been updated'
+        mailBody = 'The admin updated your data you can check your data at the user dashbord. Only username and password can\'t be updated. If you forgot your password ask your administration to delete your account after returning all the books and create a new account with the same mail-id and username.'
+        from tasks import sendEmail
+        task = sendEmail.apply_async(args=[mailSubject, sendTo, mailBody])
         return redirect('/admin')
     
     # delete user

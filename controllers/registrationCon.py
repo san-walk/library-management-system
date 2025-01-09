@@ -53,6 +53,12 @@ class registrationController():
             dbSession.commit()                    # commit the data in database
             session['username'] = registrationData['username']      # session is maintained
             session['admin'] = False
+            # send email task after the succesfully registered
+            sendTo = user.email
+            mailSubject = 'Thanks for creating your account.'
+            mailBody = 'Your account is created successfully, thanks for registering. Our library has a huge variety of books. You can issue books from now on. Once the issue is requested you have to wait for the librarian to approve your issued book. The librarian has the othority to approve or reject your issue, please don\'t perform any misleading actions on the behalf of library.'
+            from tasks import sendEmail
+            task = sendEmail.apply_async(args=[mailSubject, sendTo, mailBody])
             return redirect(f'books')
             
         except Exception as e:
