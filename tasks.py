@@ -1,8 +1,9 @@
 from celery import Celery
 from app import app
+from config import keys
 
-app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+app.config['CELERY_BROKER_URL'] = keys.CELERY_BROKER_URL
+app.config['CELERY_RESULT_BACKEND'] = keys.CELERY_RESULT_BACKEND
 
 
 

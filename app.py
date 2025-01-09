@@ -1,11 +1,11 @@
 from flask import Flask, request, redirect, jsonify
 from routes import main
-from config import SECRETKEY
+from config import keys
 # from tasks import make_celery
 
 
 app = Flask(__name__)   # create a flask app
-app.secret_key = SECRETKEY
+app.secret_key = keys.SECRETKEY
 
 
 '''
