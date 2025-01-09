@@ -20,7 +20,7 @@ class adminController():
                 session.pop('error', None)
                 return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs, err=error)
             return render_template('adminsPage.html', users=userData, books=booksData, requests=allReqs)
-        return 'You are not logedin as admin!<br><a href="http://localhost:5000/login">Click here to LOGIN</a>'
+        return 'You are not logedin as admin!<br><a href="http://localhost:5542/login">Click here to LOGIN</a>'
     
     # to get update page
     def getUpdate(user):

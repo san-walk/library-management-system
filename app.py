@@ -1,38 +1,39 @@
 from flask import Flask, request, redirect, jsonify
-from routes import main
+from flask_mail import Mail
 from config import keys
-# from tasks import make_celery
 
 
-app = Flask(__name__)   # create a flask app
-app.secret_key = keys.SECRETKEY
+# app = Flask(__name__)   # create a flask app
 
+mail = Mail()
+def create_app():
+   app = Flask(__name__)
+   app.secret_key = keys.SECRETKEY
 
-'''
-Date: 7th Jan 2025
-Purpose: celery is intigrated with this project and going to used new tasks by celery
-'''
-# app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
-# app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+   app.config['MAIL_SERVER'] = keys.MAIL_SERVER
+   app.config['MAIL_PORT'] = keys.MAIL_PORT
+   app.config['MAIL_USE_TLS'] = True
+   app.config['MAIL_USERNAME'] = keys.MAIL_USER
+   app.config['MAIL_PASSWORD'] = keys.MAIL_PASS
+   
+   mail.init_app(app)
+   from routes import main
+   app.register_blueprint(main)
+   return app
 
-# celery = make_celery(app)
-
-
-@main.route('/homeee')
-def add():
-   x = 34
-   y = 43
-   from tasks import add_numbers
-   task = add_numbers.apply_async(args=[x, y])
-   print (task.id)
-   # return task.get() if task.state == "SUCCESS" else 'waiting for your response.'
-   # print (task.get())
-   if task.state == "PENDING":
-      return jsonify({"tasks": task.id, "status": task.state})
-   elif task.state == "SUCCESS":
-      return task.get()
-   else:
-      return jsonify({"tasks": task.id})
+# @main.route('/homeee')
+# def add():
+#    x = 34
+#    y = 43
+#    from tasks import add_numbers
+#    task = add_numbers.apply_async(args=[x, y])
+#    print (task.id)
+#    if task.state == "PENDING":
+#       return jsonify({"tasks": task.id, "status": task.state})
+#    elif task.state == "SUCCESS":
+#       return task.get()
+#    else:
+#       return jsonify({"tasks": task.id})
 
 
 '''
@@ -44,16 +45,11 @@ Purpose: this function is used to handles all the invalid routes
 #    return redirect('/')
 
 
-# @celery.task
-# def add_numbers(a, b):
-#    return a+b
 
-
-
-app.register_blueprint(main)
-
-if __name__ == '__main__':
-   app.run(debug = True)
+# app.register_blueprint(main)
+# app = create_app()
+# if __name__ == '__main__':
+#    app.run(debug = True)
 
 
 

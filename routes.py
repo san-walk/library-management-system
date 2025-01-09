@@ -1,15 +1,19 @@
 import flask
-from controllers.registrationCon import registrationController
 from flask import Flask, jsonify, request, redirect, Blueprint
+from controllers.registrationCon import registrationController
 from controllers.homeCon import homeController
 from controllers.booksCon import booksController
 from controllers.loginCon import loginController, logoutController
 from controllers.adminCon import adminController
-from models.userModel import userModel
+# from models.userModel import userModel
 
 main = Blueprint('main', __name__)
 
 
+
+@main.errorhandler(404)
+def not_found(e):
+   return redirect('/')
 
 '''
 Date: 27th Dec 2024
